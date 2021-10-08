@@ -41,10 +41,14 @@
                     <tr>
                       <td><%= image_tag 'default.jpg', size: '40x40' %></td>
                       <td><%= assign.user.email %></td>
+                       <% if current_user== assign.team.owner && assign.team.owner != assign.user%>
+                          <td><%= link_to 'Give authority', give_authority_path(assign.user.id, @team.id), class: 'btn btn-sm btn-success' %></td>
+                       <% end %>
                       <%   if current_user == assign.user || current_user ==assign.team.owner %>
                         <td><%= link_to I18n.t('views.button.delete'), team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
 
                       <% end %>
+                     
                     </tr>
                   <% end %>
                 </tbody>

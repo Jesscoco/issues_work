@@ -50,6 +50,16 @@ class TeamsController < ApplicationController
     redirect_to teams_url, notice: I18n.t('views.messages.delete_team')
   end
 
+  def give_authority
+    @user= User.find(params[:member_id])  
+    @team = Team.find(params[:team_id])
+    @old_leader= User.find(@team.owner_id)  
+    @old_leader.update(keep_team_id: nil)
+    @team.update(owner_id: @user.id)
+    @user.update(keep_team_id: @team.id)
+    redirect_to team_path(@team.id)
+  end
+
   def dashboard
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
