@@ -1,5 +1,5 @@
 class AgendasController < ApplicationController
-  # before_action :set_agenda, only: %i[show edit update destroy]
+   before_action :set_agenda, only: %i[show edit update destroy]
 
   def index
     @agendas = Agenda.all
@@ -19,6 +19,21 @@ class AgendasController < ApplicationController
     else
       render :new
     end
+  end
+
+  def destroy
+  if current_user== @agenda.user || current_user == @agenda.team.owner
+    @agenda.destroy 
+    @agenda.team.users.each do |user|
+      AgendaMailer.agenda_mail(user , @agenda).deliver
+    end
+    flash[:danger] = " Agenda supprime" 
+  
+  end
+  
+    
+    
+    redirect_to dashboard_url
   end
 
   private
